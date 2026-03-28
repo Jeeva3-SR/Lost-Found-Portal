@@ -47,10 +47,11 @@ pipeline {
 
                 // Restart backend via PM2
                 sh '''
+                    PM2=$(which pm2 2>/dev/null || echo "/usr/local/bin/pm2")
                     cd /var/www/academicconnect/backend
-                    pm2 delete academicconnect-api 2>/dev/null || true
-                    pm2 start server.js --name "academicconnect-api"
-                    pm2 save
+                    $PM2 delete academicconnect-api 2>/dev/null || true
+                    $PM2 start server.js --name "academicconnect-api"
+                    $PM2 save
                 '''
             }
         }
