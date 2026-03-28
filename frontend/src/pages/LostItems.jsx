@@ -28,7 +28,7 @@ const LostItems = () => {
                 const config = {
                     headers: { Authorization: `Bearer ${user.token}` }
                 };
-                const { data } = await axios.get('http://localhost:5000/api/items?type=lost', config);
+                const { data } = await axios.get('/api/items?type=lost', config);
                 setItems(data);
             } catch (error) {
                 console.error('Error fetching lost items:', error);
@@ -138,7 +138,7 @@ const LostItems = () => {
                                 <div className="h-56 bg-slate-100 relative">
                                     {item.image ? (
                                         <img 
-                                            src={`http://localhost:5000/uploads/${item.image}`} 
+                                            src={`/uploads/${item.image}`} 
                                             alt={item.title} 
                                             className="w-full h-full object-cover"
                                         />

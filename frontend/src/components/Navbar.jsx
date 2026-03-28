@@ -19,7 +19,7 @@ const Navbar = () => {
         const fetchNotifications = async () => {
             try {
                 const config = { headers: { Authorization: `Bearer ${user.token}` } };
-                const { data } = await axios.get('http://localhost:5000/api/notifications', config);
+                const { data } = await axios.get('/api/notifications', config);
                 setNotifications(data);
             } catch (err) {
                 console.error('Error fetching notifications:', err);
@@ -46,7 +46,7 @@ const Navbar = () => {
     const markAsRead = async (id) => {
         try {
             const config = { headers: { Authorization: `Bearer ${user.token}` } };
-            await axios.put(`http://localhost:5000/api/notifications/${id}`, {}, config);
+            await axios.put(`/api/notifications/${id}`, {}, config);
             setNotifications(prev => prev.map(n => n._id === id ? { ...n, isRead: true } : n));
         } catch (err) {
             console.error(err);

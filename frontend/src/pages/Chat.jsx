@@ -30,7 +30,7 @@ const Chat = () => {
             const fetchItem = async () => {
                 try {
                     const config = { headers: { Authorization: `Bearer ${user.token}` } };
-                    const { data } = await axios.get(`http://localhost:5000/api/items/${itemId}`, config);
+                    const { data } = await axios.get(`/api/items/${itemId}`, config);
                     setActiveItem(data);
                     
                     // If we also have a receiverId, immediately set the selected user 
@@ -51,7 +51,7 @@ const Chat = () => {
         const fetchConversations = async () => {
             try {
                 const config = { headers: { Authorization: `Bearer ${user.token}` } };
-                const { data } = await axios.get('http://localhost:5000/api/messages/conversations', config);
+                const { data } = await axios.get('/api/messages/conversations', config);
                 setConversations(data);
                 
                 // If receiverId in URL, try to find existing conversation
@@ -88,7 +88,7 @@ const Chat = () => {
                         ? `Hi, I found your lost item: "${activeItem.title}". I'd like to return it to you!`
                         : `Hi, I'm claiming the item you found: "${activeItem.title}". It belongs to me!`;
                     
-                    const { data } = await axios.post('http://localhost:5000/api/messages', {
+                    const { data } = await axios.post('/api/messages', {
                         receiver: selectedUser._id,
                         content: initialContent,
                         item: itemId
@@ -97,7 +97,7 @@ const Chat = () => {
                     setMessages(prev => [...prev, data]);
                     
                     // Refresh conversation list
-                    const { data: convs } = await axios.get('http://localhost:5000/api/messages/conversations', config);
+                    const { data: convs } = await axios.get('/api/messages/conversations', config);
                     setConversations(convs);
                 } catch (err) {
                     console.error('Error auto-sending message:', err);
@@ -113,7 +113,7 @@ const Chat = () => {
             const fetchMessages = async () => {
                 try {
                     const config = { headers: { Authorization: `Bearer ${user.token}` } };
-                    const { data } = await axios.get(`http://localhost:5000/api/messages/${selectedUser._id}`, config);
+                    const { data } = await axios.get(`/api/messages/${selectedUser._id}`, config);
                     setMessages(data);
                 } catch (err) {
                     console.error(err);
@@ -151,7 +151,7 @@ const Chat = () => {
 
         try {
             const config = { headers: { Authorization: `Bearer ${user.token}` } };
-            const { data } = await axios.post('http://localhost:5000/api/messages', {
+            const { data } = await axios.post('/api/messages', {
                 receiver: selectedUser._id,
                 content: newMessage,
                 item: itemId
@@ -161,7 +161,7 @@ const Chat = () => {
             setNewMessage('');
             
             // Refresh conversation list to show latest message
-            const { data: convs } = await axios.get('http://localhost:5000/api/messages/conversations', config);
+            const { data: convs } = await axios.get('/api/messages/conversations', config);
             setConversations(convs);
         } catch (err) {
             console.error(err);
@@ -241,7 +241,7 @@ const Chat = () => {
                                             <div className="w-16 h-16 rounded-2xl overflow-hidden bg-white border border-slate-100 shadow-sm shrink-0">
                                                 {activeItem.image ? (
                                                     <img 
-                                                        src={`http://localhost:5000/uploads/${activeItem.image}`} 
+                                                        src={`/uploads/${activeItem.image}`} 
                                                         alt={activeItem.title}
                                                         className="w-full h-full object-cover"
                                                     />
@@ -291,7 +291,7 @@ const Chat = () => {
                                                             <div className="w-10 h-10 rounded-lg overflow-hidden bg-slate-100 shrink-0">
                                                                 {msg.item.image ? (
                                                                     <img 
-                                                                        src={`http://localhost:5000/uploads/${msg.item.image}`} 
+                                                                        src={`/uploads/${msg.item.image}`} 
                                                                         className="w-full h-full object-cover" 
                                                                         onError={(e) => { e.target.onerror = null; e.target.src = 'https://placehold.co/100x100?text=Item'; }}
                                                                     />
@@ -329,7 +329,7 @@ const Chat = () => {
                                     <div className="mb-4 flex items-center gap-4 bg-primary/5 p-4 rounded-[2rem] border border-primary/10 animate-in slide-in-from-bottom-4 duration-500 relative group">
                                         <div className="w-14 h-14 rounded-2xl overflow-hidden bg-white border border-slate-100 shadow-sm shrink-0">
                                             {activeItem.image ? (
-                                                <img src={`http://localhost:5000/uploads/${activeItem.image}`} className="w-full h-full object-cover" />
+                                                <img src={`/uploads/${activeItem.image}`} className="w-full h-full object-cover" />
                                             ) : (
                                                 <div className="w-full h-full flex items-center justify-center text-slate-200"><Package size={24} /></div>
                                             )}
@@ -402,7 +402,7 @@ const Chat = () => {
                         <div className="h-64 bg-slate-100 relative overflow-hidden">
                             {viewingItem.image ? (
                                 <img 
-                                    src={`http://localhost:5000/uploads/${viewingItem.image}`} 
+                                    src={`/uploads/${viewingItem.image}`} 
                                     className="w-full h-full object-cover"
                                     onError={(e) => { e.target.onerror = null; e.target.src = 'https://placehold.co/400x300?text=No+Image'; }}
                                 />

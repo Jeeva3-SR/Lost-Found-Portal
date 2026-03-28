@@ -27,7 +27,7 @@ const Claims = () => {
             const config = {
                 headers: { Authorization: `Bearer ${user.token}` }
             };
-            const { data } = await axios.get('http://localhost:5000/api/claims/received', config);
+            const { data } = await axios.get('/api/claims/received', config);
             setClaims(data);
         } catch (error) {
             console.error('Error fetching claims:', error);
@@ -41,7 +41,7 @@ const Claims = () => {
             const config = {
                 headers: { Authorization: `Bearer ${user.token}` }
             };
-            await axios.put(`http://localhost:5000/api/claims/${id}`, { status }, config);
+            await axios.put(`/api/claims/${id}`, { status }, config);
             fetchClaims(); // Refresh
         } catch (error) {
             alert('Failed to update claim');

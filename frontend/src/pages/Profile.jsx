@@ -23,9 +23,9 @@ const Profile = () => {
             try {
                 const config = { headers: { Authorization: `Bearer ${user.token}` } };
                 const [lostRes, foundRes, convsRes] = await Promise.all([
-                    axios.get('http://localhost:5000/api/items?type=lost', config),
-                    axios.get('http://localhost:5000/api/items?type=found', config),
-                    axios.get('http://localhost:5000/api/messages/conversations', config)
+                    axios.get('/api/items?type=lost', config),
+                    axios.get('/api/items?type=found', config),
+                    axios.get('/api/messages/conversations', config)
                 ]);
                 
                 const myLost = lostRes.data.filter(i => i.reporter?._id === user._id);
@@ -149,7 +149,7 @@ const Profile = () => {
                                         <div className="aspect-square rounded-2xl overflow-hidden bg-slate-100 mb-3 relative">
                                             {item.image ? (
                                                 <img 
-                                                    src={`http://localhost:5000/uploads/${item.image}`} 
+                                                    src={`/uploads/${item.image}`} 
                                                     className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
                                                     onError={(e) => { e.target.onerror = null; e.target.style.display = 'none'; }}
                                                 />

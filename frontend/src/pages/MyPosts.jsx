@@ -27,7 +27,7 @@ const MyPosts = () => {
                 const config = {
                     headers: { Authorization: `Bearer ${user.token}` }
                 };
-                const { data } = await axios.get('http://localhost:5000/api/items/my-posts', config);
+                const { data } = await axios.get('/api/items/my-posts', config);
                 setPosts(data);
             } catch (error) {
                 console.error('Error fetching posts:', error);
@@ -44,7 +44,7 @@ const MyPosts = () => {
             const config = {
                 headers: { Authorization: `Bearer ${user.token}` }
             };
-            await axios.delete(`http://localhost:5000/api/items/${id}`, config);
+            await axios.delete(`/api/items/${id}`, config);
             setPosts(posts.filter(post => post._id !== id));
         } catch (error) {
             alert('Failed to delete post');
@@ -100,7 +100,7 @@ const MyPosts = () => {
                                 <div className="h-48 bg-slate-100 relative">
                                     {post.image ? (
                                         <img 
-                                            src={`http://localhost:5000/uploads/${post.image}`} 
+                                            src={`/uploads/${post.image}`} 
                                             alt={post.title} 
                                             className="w-full h-full object-cover"
                                         />

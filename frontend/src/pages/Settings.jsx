@@ -23,7 +23,7 @@ const Settings = () => {
             const config = {
                 headers: { Authorization: `Bearer ${user.token}` }
             };
-            const { data } = await axios.put('http://localhost:5000/api/auth/profile', { rollNumber }, config);
+            const { data } = await axios.put('/api/auth/profile', { rollNumber }, config);
             
             // Update local storage/context with new user data
             const updatedUser = { ...user, rollNumber: data.rollNumber, token: data.token };
@@ -49,7 +49,7 @@ const Settings = () => {
             const config = {
                 headers: { Authorization: `Bearer ${user.token}` }
             };
-            await axios.put('http://localhost:5000/api/auth/change-password', {
+            await axios.put('/api/auth/change-password', {
                 oldPassword: passwords.oldPassword,
                 newPassword: passwords.newPassword
             }, config);

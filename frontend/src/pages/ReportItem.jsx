@@ -67,7 +67,7 @@ const ReportItem = () => {
                     Authorization: `Bearer ${user.token}`
                 }
             };
-            await axios.post('http://localhost:5000/api/items', data, config);
+            await axios.post('/api/items', data, config);
             navigate('/my-posts');
         } catch (error) {
             console.error('Error reporting item:', error);

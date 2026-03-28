@@ -19,7 +19,7 @@ export const AuthProvider = ({ children }) => {
 
     const login = async (rollNumber, password) => {
         try {
-            const { data } = await axios.post('http://localhost:5000/api/auth/login', { rollNumber, password });
+            const { data } = await axios.post('/api/auth/login', { rollNumber, password });
             setUser(data);
             localStorage.setItem('user', JSON.stringify(data));
             return data;
@@ -30,7 +30,7 @@ export const AuthProvider = ({ children }) => {
 
     const register = async (userData) => {
       try {
-          const { data } = await axios.post('http://localhost:5000/api/auth/register', userData);
+          const { data } = await axios.post('/api/auth/register', userData);
           setUser(data);
           localStorage.setItem('user', JSON.stringify(data));
           return data;
@@ -51,7 +51,7 @@ export const AuthProvider = ({ children }) => {
                     Authorization: `Bearer ${user.token}`,
                 },
             };
-            const { data } = await axios.put('http://localhost:5000/api/auth/change-password', { oldPassword, newPassword }, config);
+            const { data } = await axios.put('/api/auth/change-password', { oldPassword, newPassword }, config);
             return data;
         } catch (error) {
             throw error.response?.data?.message || 'Password update failed';
