@@ -63,7 +63,7 @@ const Sidebar = () => {
                 >
                     <div className="w-5 h-5 rounded-full bg-gradient-to-br from-purple-500 to-pink-500 flex items-center justify-center p-[1px]">
                         <div className="w-full h-full rounded-full bg-white flex items-center justify-center">
-                            <span className="text-[6px] font-black text-purple-600">{initials}</span>
+                            <User size={10} className="text-slate-500" />
                         </div>
                     </div>
                     Profile

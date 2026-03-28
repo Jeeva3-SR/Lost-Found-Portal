@@ -1,7 +1,7 @@
 import { useState, useEffect, useRef } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import { NavLink, Link, useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
-import { Bell, MessageSquare, Check, X } from 'lucide-react';
+import { Bell, MessageSquare, Check, X, User } from 'lucide-react';
 import axios from 'axios';
 
 const Navbar = () => {
@@ -77,11 +77,9 @@ const Navbar = () => {
             
             <div className="flex items-center gap-8">
                 <nav className="hidden md:flex items-center gap-6">
-                    <Link to="/dashboard" className="text-sm font-bold text-primary border-b-2 border-primary py-1">Dashboard</Link>
-                    <Link to="/chat" className="text-sm font-semibold text-slate-500 hover:text-primary transition-colors flex items-center gap-2">
-                        Chat
-                    </Link>
-                    <Link to="/settings" className="text-sm font-semibold text-slate-500 hover:text-primary transition-colors">Settings</Link>
+                    <NavLink to="/dashboard" className={({ isActive }) => `text-sm font-semibold py-1 transition-colors ${isActive ? 'text-primary font-bold border-b-2 border-primary' : 'text-slate-500 hover:text-primary'}`}>Dashboard</NavLink>
+                    <NavLink to="/chat" className={({ isActive }) => `text-sm font-semibold py-1 transition-colors ${isActive ? 'text-primary font-bold border-b-2 border-primary' : 'text-slate-500 hover:text-primary'}`}>Chat</NavLink>
+                    <NavLink to="/settings" className={({ isActive }) => `text-sm font-semibold py-1 transition-colors ${isActive ? 'text-primary font-bold border-b-2 border-primary' : 'text-slate-500 hover:text-primary'}`}>Settings</NavLink>
                 </nav>
 
                 <div className="flex items-center gap-4 pl-8 border-l border-slate-200">
@@ -144,10 +142,10 @@ const Navbar = () => {
                         )}
                     </div>
 
-                    {/* Instagram-style gradient avatar */}
-                    <Link to="/profile" className="w-10 h-10 rounded-full flex items-center justify-center overflow-hidden border-2 border-transparent bg-gradient-to-br from-purple-500 via-pink-500 to-orange-400 p-[2px] hover:scale-110 transition-transform">
+                    {/* Profile avatar with person silhouette */}
+                    <Link to="/profile" className="w-10 h-10 rounded-full flex items-center justify-center overflow-hidden bg-gradient-to-br from-purple-500 via-pink-500 to-orange-400 p-[2px] hover:scale-110 transition-transform">
                         <div className="w-full h-full rounded-full bg-white flex items-center justify-center">
-                            <span className="text-xs font-black bg-gradient-to-br from-purple-600 to-pink-500 bg-clip-text text-transparent">{initials}</span>
+                            <User size={18} className="text-slate-500" />
                         </div>
                     </Link>
                 </div>

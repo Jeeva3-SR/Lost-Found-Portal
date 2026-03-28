@@ -4,7 +4,7 @@ import Layout from '../components/Layout';
 import axios from 'axios';
 import { 
     Package, Clock, MapPin, MessageSquare, FileText, 
-    Calendar, LogOut, Settings, Shield
+    Calendar, LogOut, Settings, Shield, User
 } from 'lucide-react';
 import { Link, useNavigate } from 'react-router-dom';
 
@@ -73,9 +73,7 @@ const Profile = () => {
                         <div className="-mt-16 mb-6 flex items-end gap-6">
                             <div className="w-32 h-32 rounded-full bg-gradient-to-br from-purple-500 via-pink-500 to-orange-400 p-[3px] shadow-2xl shadow-purple-500/30">
                                 <div className="w-full h-full rounded-full bg-white flex items-center justify-center">
-                                    <span className="text-4xl font-black bg-gradient-to-br from-purple-600 to-pink-500 bg-clip-text text-transparent">
-                                        {initials}
-                                    </span>
+                                    <User size={48} className="text-slate-400" />
                                 </div>
                             </div>
                             <div className="pb-2 flex-1">
