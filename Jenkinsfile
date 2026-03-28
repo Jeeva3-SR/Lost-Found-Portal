@@ -1,92 +1,67 @@
 pipeline {
     agent any
-    
-    environment {
-        AZURE_WEBAPP_NAME_BACKEND  = 'academicconnect-api'
-        AZURE_WEBAPP_NAME_FRONTEND = 'academicconnect-web'
-        AZURE_RESOURCE_GROUP       = 'academicconnect-rg'
-        NODE_VERSION               = '18'
-    }
-    
+
     tools {
-        nodejs "${NODE_VERSION}"
+        nodejs '18'
     }
-    
+
     stages {
         stage('Checkout') {
             steps {
                 checkout scm
             }
         }
-        
-        stage('Install Dependencies') {
-            parallel {
-                stage('Backend') {
-                    steps {
-                        dir('backend') {
-                            sh 'npm ci'
-                        }
-                    }
-                }
-                stage('Frontend') {
-                    steps {
-                        dir('frontend') {
-                            sh 'npm ci'
-                        }
-                    }
+
+        stage('Install Backend') {
+            steps {
+                dir('backend') {
+                    sh 'npm ci'
                 }
             }
         }
-        
-        stage('Build Frontend') {
+
+        stage('Install & Build Frontend') {
             steps {
                 dir('frontend') {
+                    sh 'npm ci'
                     sh 'npm run build'
                 }
             }
         }
-        
-        stage('Deploy Backend to Azure') {
+
+        stage('Deploy') {
             steps {
-                dir('backend') {
-                    sh '''
-                        zip -r ../backend.zip . -x "node_modules/*" "uploads/*"
-                    '''
-                }
-                withCredentials([azureServicePrincipal('azure-sp-credentials')]) {
-                    sh '''
-                        az login --service-principal -u $AZURE_CLIENT_ID -p $AZURE_CLIENT_SECRET -t $AZURE_TENANT_ID
-                        az webapp deploy --resource-group $AZURE_RESOURCE_GROUP --name $AZURE_WEBAPP_NAME_BACKEND --src-path backend.zip --type zip
-                    '''
-                }
-            }
-        }
-        
-        stage('Deploy Frontend to Azure') {
-            steps {
-                dir('frontend') {
-                    sh '''
-                        cd dist && zip -r ../../frontend.zip .
-                    '''
-                }
-                withCredentials([azureServicePrincipal('azure-sp-credentials')]) {
-                    sh '''
-                        az webapp deploy --resource-group $AZURE_RESOURCE_GROUP --name $AZURE_WEBAPP_NAME_FRONTEND --src-path frontend.zip --type zip
-                    '''
-                }
+                // Copy built files to deployment directory
+                sh '''
+                    sudo rm -rf /var/www/academicconnect/backend
+                    sudo rm -rf /var/www/academicconnect/frontend
+                    sudo mkdir -p /var/www/academicconnect/backend
+                    sudo mkdir -p /var/www/academicconnect/frontend
+
+                    sudo cp -r backend/* /var/www/academicconnect/backend/
+                    sudo cp -r backend/node_modules /var/www/academicconnect/backend/
+                    sudo cp -r frontend/dist/* /var/www/academicconnect/frontend/
+
+                    sudo cp /var/www/academicconnect/.env /var/www/academicconnect/backend/.env 2>/dev/null || true
+                '''
+
+                // Restart backend via PM2
+                sh '''
+                    cd /var/www/academicconnect/backend
+                    pm2 delete academicconnect-api 2>/dev/null || true
+                    pm2 start server.js --name "academicconnect-api"
+                    pm2 save
+                '''
             }
         }
     }
-    
+
     post {
         success {
             echo '✅ Deployment successful!'
         }
         failure {
             echo '❌ Deployment failed.'
-        }
-        always {
-            cleanWs()
         }
     }
 }
