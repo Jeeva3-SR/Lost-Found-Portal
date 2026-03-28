@@ -31,27 +31,32 @@ pipeline {
 
         stage('Deploy') {
             steps {
-                // Copy built files to deployment directory
+                // Stop PM2 first
                 sh '''
-                    sudo rm -rf /var/www/academicconnect/backend
-                    sudo rm -rf /var/www/academicconnect/frontend
-                    sudo mkdir -p /var/www/academicconnect/backend
-                    sudo mkdir -p /var/www/academicconnect/frontend
-
-                    sudo cp -r backend/* /var/www/academicconnect/backend/
-                    sudo cp -r backend/node_modules /var/www/academicconnect/backend/
-                    sudo cp -r frontend/dist/* /var/www/academicconnect/frontend/
-
-                    sudo cp /var/www/academicconnect/.env /var/www/academicconnect/backend/.env 2>/dev/null || true
+                    sudo -u Jeeva bash -c "pm2 delete academicconnect-api 2>/dev/null || true"
+                    sudo -u Jeeva bash -c "pm2 kill 2>/dev/null || true"
                 '''
 
-                // Restart backend via PM2
+                // Sync files (without deleting uploads or .env)
                 sh '''
-                    PM2=$(which pm2 2>/dev/null || echo "/usr/local/bin/pm2")
-                    cd /var/www/academicconnect/backend
-                    $PM2 delete academicconnect-api 2>/dev/null || true
-                    $PM2 start server.js --name "academicconnect-api"
-                    $PM2 save
+                    sudo mkdir -p /var/www/academicconnect/backend
+                    sudo mkdir -p /var/www/academicconnect/frontend
+                    sudo mkdir -p /var/www/academicconnect/backend/uploads
+
+                    sudo rsync -a --delete --exclude='uploads' --exclude='.env' --exclude='node_modules' backend/ /var/www/academicconnect/backend/
+                    sudo rsync -a --delete frontend/dist/ /var/www/academicconnect/frontend/
+
+                    cd backend && sudo cp -r node_modules /var/www/academicconnect/backend/ 2>/dev/null || true
+                    cd ..
+
+                    sudo cp /var/www/academicconnect/.env /var/www/academicconnect/backend/.env 2>/dev/null || true
+
+                    sudo chown -R Jeeva:Jeeva /var/www/academicconnect
+                '''
+
+                // Start PM2 fresh as user Jeeva
+                sh '''
+                    sudo -u Jeeva bash -c "cd /var/www/academicconnect/backend && pm2 start server.js --name academicconnect-api && pm2 save"
                 '''
             }
         }
