@@ -26,11 +26,6 @@ const itemSchema = new mongoose.Schema({
     image: {
         type: String // Filename
     },
-    status: {
-        type: String,
-        enum: ['active', 'claimed', 'resolved'],
-        default: 'active'
-    },
     reporter: {
         type: mongoose.Schema.Types.ObjectId,
         ref: 'User',

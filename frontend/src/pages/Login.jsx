@@ -14,12 +14,8 @@ const Login = () => {
         e.preventDefault();
         setError('');
         try {
-            const user = await login(rollNumber, password);
-            if (user.forcePasswordChange) {
-                navigate('/update-password');
-            } else {
-                navigate('/dashboard');
-            }
+            await login(rollNumber, password);
+            navigate('/dashboard');
         } catch (err) {
             setError(err);
         }

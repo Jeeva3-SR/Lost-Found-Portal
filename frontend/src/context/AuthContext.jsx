@@ -52,12 +52,6 @@ export const AuthProvider = ({ children }) => {
                 },
             };
             const { data } = await axios.put('http://localhost:5000/api/auth/change-password', { oldPassword, newPassword }, config);
-            
-            // Update user state to reflect forcePasswordChange = false
-            const updatedUser = { ...user, forcePasswordChange: false };
-            setUser(updatedUser);
-            localStorage.setItem('user', JSON.stringify(updatedUser));
-            
             return data;
         } catch (error) {
             throw error.response?.data?.message || 'Password update failed';

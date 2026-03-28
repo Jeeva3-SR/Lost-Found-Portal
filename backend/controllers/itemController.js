@@ -28,10 +28,9 @@ const reportItem = async (req, res) => {
 // @route   GET /api/items
 const getItems = async (req, res) => {
     try {
-        const { type, status } = req.query;
+        const { type } = req.query;
         const filter = {};
         if (type) filter.type = type;
-        if (status) filter.status = status;
 
         const items = await Item.find(filter).populate('reporter', 'rollNumber').sort({ createdAt: -1 });
         res.json(items);
@@ -40,11 +39,25 @@ const getItems = async (req, res) => {
     }
 };
 
+// @desc    Get single item by ID
+// @route   GET /api/items/:id
+const getItemById = async (req, res) => {
+    try {
+        const item = await Item.findById(req.params.id).populate('reporter', 'rollNumber');
+        if (!item) {
+            return res.status(404).json({ message: 'Item not found' });
+        }
+        res.json(item);
+    } catch (error) {
+        res.status(500).json({ message: 'Error fetching item details' });
+    }
+};
+
 // @desc    Get user's posts
 // @route   GET /api/items/my-posts
 const getMyPosts = async (req, res) => {
     try {
-        const items = await Item.find({ reporter: req.user._id }).sort({ createdAt: -1 });
+        const items = await Item.find({ reporter: req.user._id }).populate('reporter', 'rollNumber').sort({ createdAt: -1 });
         res.json(items);
     } catch (error) {
         res.status(500).json({ message: 'Error fetching your posts' });
@@ -94,34 +107,13 @@ const deleteItem = async (req, res) => {
     }
 };
 
-const { findMatchesForItem } = require('../services/matchingService');
 
-// @desc    Get potential matches for an item
-// @route   GET /api/items/:id/matches
-const getMatches = async (req, res) => {
-    try {
-        const item = await Item.findById(req.params.id);
-        if (!item) {
-            return res.status(404).json({ message: 'Item not found' });
-        }
-
-        // Get all items of opposite type
-        const oppositeType = item.type === 'lost' ? 'found' : 'lost';
-        const candidateItems = await Item.find({ type: oppositeType, status: 'active' }).populate('reporter', 'rollNumber');
-
-        const matches = await findMatchesForItem(item, candidateItems);
-        res.json(matches);
-    } catch (error) {
-        console.error(error);
-        res.status(500).json({ message: 'Error finding matches' });
-    }
-};
 
 module.exports = {
     reportItem,
     getItems,
     getMyPosts,
+    getItemById,
     updateItem,
-    deleteItem,
-    getMatches
+    deleteItem
 };

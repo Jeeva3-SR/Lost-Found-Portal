@@ -7,20 +7,29 @@ const path = require('path');
 const morgan = require('morgan');
 const authRoutes = require('./routes/authRoutes');
 const itemRoutes = require('./routes/itemRoutes');
-const claimRoutes = require('./routes/claimRoutes');
+const messageRoutes = require('./routes/messageRoutes');
+const notificationRoutes = require('./routes/notificationRoutes');
 
+const fs = require('fs');
 const app = express();
+
+// Ensure uploads directory exists
+const uploadsDir = path.join(__dirname, 'uploads');
+if (!fs.existsSync(uploadsDir)) {
+    fs.mkdirSync(uploadsDir);
+}
 
 // Middleware
 app.use(cors());
 app.use(morgan('dev'));
 app.use(express.json());
-app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
+app.use('/uploads', express.static(uploadsDir));
 
 // Routes
 app.use('/api/auth', authRoutes);
 app.use('/api/items', itemRoutes);
-app.use('/api/claims', claimRoutes);
+app.use('/api/messages', messageRoutes);
+app.use('/api/notifications', notificationRoutes);
 
 // Database Connection
 const MONGODB_URI = process.env.MONGODB_URI || 'mongodb://localhost:27017/academic_connect';

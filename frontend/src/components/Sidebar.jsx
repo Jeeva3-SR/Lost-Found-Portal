@@ -8,7 +8,8 @@ import {
   FileText, 
   Settings, 
   LogOut,
-  Package
+  Package,
+  MessageSquare
 } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
 
@@ -17,10 +18,10 @@ const Sidebar = () => {
 
     const navItems = [
         { name: 'Dashboard', icon: LayoutDashboard, path: '/dashboard' },
-        { name: 'Report Lost', icon: Search, path: '/report/lost' },
-        { name: 'Report Found', icon: PlusCircle, path: '/report/found' },
-        { name: 'View Matches', icon: Eye, path: '/matches' },
-        { name: 'My Posts', icon: FileText, path: '/my-posts' },
+        { name: 'Lost Items', icon: Search, path: '/lost-items' },
+        { name: 'Found Items', icon: PlusCircle, path: '/found-items' },
+        { name: 'My Reports', icon: FileText, path: '/my-posts' },
+        { name: 'Chat', icon: MessageSquare, path: '/chat' },
     ];
 
     return (

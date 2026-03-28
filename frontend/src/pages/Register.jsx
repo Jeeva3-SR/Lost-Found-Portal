@@ -30,7 +30,7 @@ const Register = () => {
                 rollNumber: formData.rollNumber,
                 password: formData.password
             });
-            navigate('/update-password');
+            navigate('/dashboard');
         } catch (err) {
             setError(err);
         }

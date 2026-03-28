@@ -48,7 +48,7 @@ const UpdatePassword = () => {
                                 curator identity.
                             </h1>
                             <p className="text-slate-300 text-sm leading-relaxed max-w-xs">
-                                Our enhanced security protocols ensure that your research data and academic matches remain private and protected.
+                                Our enhanced security protocols ensure that your research data and academic records remain private and protected.
                             </p>
                         </div>
                     </div>

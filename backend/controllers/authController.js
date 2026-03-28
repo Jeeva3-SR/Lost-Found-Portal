@@ -18,8 +18,7 @@ const registerUser = async (req, res) => {
     const user = await User.create({
         rollNumber,
         password, // Pre-save hook will hash this
-        role: role || 'user',
-        forcePasswordChange: true // Default as per requirements
+        role: role || 'user'
     });
 
     if (user) {
@@ -27,7 +26,6 @@ const registerUser = async (req, res) => {
             _id: user._id,
             rollNumber: user.rollNumber,
             role: user.role,
-            forcePasswordChange: user.forcePasswordChange,
             token: generateToken(user._id)
         });
     } else {
@@ -47,7 +45,6 @@ const loginUser = async (req, res) => {
             _id: user._id,
             rollNumber: user.rollNumber,
             role: user.role,
-            forcePasswordChange: user.forcePasswordChange,
             token: generateToken(user._id)
         });
     } else {
@@ -63,7 +60,6 @@ const changePassword = async (req, res) => {
 
     if (user && (await user.comparePassword(oldPassword))) {
         user.password = newPassword;
-        user.forcePasswordChange = false;
         await user.save();
         res.json({ message: 'Password updated successfully' });
     } else {
@@ -71,4 +67,29 @@ const changePassword = async (req, res) => {
     }
 };
 
-module.exports = { registerUser, loginUser, changePassword };
+// @desc    Update user profile
+// @route   PUT /api/auth/profile
+const updateProfile = async (req, res) => {
+    try {
+        const user = await User.findById(req.user._id);
+
+        if (user) {
+            user.rollNumber = req.body.rollNumber || user.rollNumber;
+            // Add other fields if necessary
+            
+            const updatedUser = await user.save();
+            res.json({
+                _id: updatedUser._id,
+                rollNumber: updatedUser.rollNumber,
+                role: updatedUser.role,
+                token: generateToken(updatedUser._id)
+            });
+        } else {
+            res.status(404).json({ message: 'User not found' });
+        }
+    } catch (error) {
+        res.status(400).json({ message: 'Error updating profile' });
+    }
+};
+
+module.exports = { registerUser, loginUser, changePassword, updateProfile };

@@ -18,6 +18,7 @@ import { Link } from 'react-router-dom';
 const MyPosts = () => {
     const [posts, setPosts] = useState([]);
     const [loading, setLoading] = useState(true);
+    const [filterType, setFilterType] = useState('all');
     const { user } = useAuth();
 
     useEffect(() => {
@@ -50,43 +51,52 @@ const MyPosts = () => {
         }
     };
 
-    const getStatusStyle = (status) => {
-        switch (status) {
-            case 'active': return 'bg-green-100 text-green-700';
-            case 'claimed': return 'bg-blue-100 text-blue-700';
-            case 'resolved': return 'bg-slate-100 text-slate-600';
-            default: return 'bg-slate-100 text-slate-600';
-        }
-    };
+    const filteredPosts = posts.filter(post => filterType === 'all' || post.type === filterType);
 
     return (
         <Layout>
             <div className="max-w-6xl mx-auto">
-                <header className="mb-10 flex justify-between items-center">
+                <header className="mb-10 flex flex-col md:flex-row md:items-center justify-between gap-6">
                     <div>
                         <h1 className="text-3xl font-extrabold text-primary mb-2">My Reports</h1>
-                        <p className="text-slate-500 font-medium">Manage and track the status of your reported items.</p>
+                        <p className="text-slate-500 font-medium text-sm">Manage and track your reported lost and found items.</p>
+                    </div>
+                    <div className="flex gap-4">
+                        <Link to="/report/lost" className="bg-primary text-white px-6 py-3 rounded-xl text-sm font-bold shadow-lg shadow-primary/20 hover:bg-primary-light transition-all flex items-center gap-2">
+                             Report Lost
+                        </Link>
+                        <Link to="/report/found" className="bg-white border border-slate-200 text-primary px-6 py-3 rounded-xl text-sm font-bold hover:bg-slate-50 transition-all flex items-center gap-2">
+                             Report Found
+                        </Link>
                     </div>
                 </header>
 
+                <div className="mb-8 flex items-center gap-4 bg-white p-2 rounded-2xl border border-slate-100 w-fit">
+                    {['all', 'lost', 'found'].map((t) => (
+                        <button
+                            key={t}
+                            onClick={() => setFilterType(t)}
+                            className={`px-6 py-2 rounded-xl text-xs font-bold uppercase tracking-widest transition-all ${filterType === t ? 'bg-primary text-white shadow-md' : 'text-slate-400 hover:bg-slate-50'}`}
+                        >
+                            {t}
+                        </button>
+                    ))}
+                </div>
+
                 {loading ? (
                     <div className="flex justify-center items-center h-64 font-bold text-slate-300">Loading your reports...</div>
-                ) : posts.length === 0 ? (
-                    <div className="bg-white rounded-3xl p-16 text-center border border-dashed border-slate-200">
-                        <div className="bg-slate-50 w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-6">
-                            <Package className="text-slate-300" size={32} />
+                ) : filteredPosts.length === 0 ? (
+                    <div className="bg-white rounded-3xl p-16 text-center border border-dashed border-slate-200 shadow-sm">
+                        <div className="bg-slate-50 w-20 h-20 rounded-full flex items-center justify-center mx-auto mb-6">
+                            <Package className="text-slate-200" size={40} />
                         </div>
-                        <h3 className="text-xl font-bold text-primary mb-2">No reports yet</h3>
-                        <p className="text-slate-400 mb-8 max-w-xs mx-auto text-sm">You haven't reported any lost or found items. Your active reports will appear here.</p>
-                        <div className="flex justify-center gap-4">
-                            <Link to="/report-lost" className="bg-primary text-white px-6 py-3 rounded-xl text-sm font-bold shadow-lg shadow-primary/20 hover:bg-primary-light transition-all">Report Lost</Link>
-                            <Link to="/report-found" className="bg-white border border-slate-200 text-primary px-6 py-3 rounded-xl text-sm font-bold hover:bg-slate-50 transition-all">Report Found</Link>
-                        </div>
+                        <h3 className="text-xl font-bold text-primary mb-2">No {filterType !== 'all' ? filterType : ''} reports found</h3>
+                        <p className="text-slate-400 max-w-xs mx-auto text-sm font-medium">Use the buttons above to report a lost or found item.</p>
                     </div>
                 ) : (
-                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                        {posts.map((post) => (
-                            <div key={post._id} className="bg-white rounded-3xl border border-slate-100 overflow-hidden shadow-sm hover:shadow-xl transition-all group">
+                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                        {filteredPosts.map((post) => (
+                            <div key={post._id} className="bg-white rounded-[2rem] border border-slate-100 overflow-hidden shadow-sm hover:shadow-xl transition-all group">
                                 <div className="h-48 bg-slate-100 relative">
                                     {post.image ? (
                                         <img 
@@ -100,49 +110,40 @@ const MyPosts = () => {
                                         </div>
                                     )}
                                     <div className="absolute top-4 left-4">
-                                        <span className={`px-3 py-1.5 rounded-full text-[10px] font-bold uppercase tracking-wider shadow-sm ${post.type === 'lost' ? 'bg-red-500 text-white' : 'bg-blue-500 text-white'}`}>
+                                        <span className={`px-4 py-1.5 rounded-full text-[10px] font-bold uppercase tracking-widest shadow-lg ${post.type === 'lost' ? 'bg-red-500 text-white' : 'bg-blue-600 text-white'}`}>
                                             {post.type}
                                         </span>
                                     </div>
-                                    <div className={`absolute top-4 right-4 px-3 py-1.5 rounded-full text-[10px] font-bold uppercase tracking-wider shadow-sm ${getStatusStyle(post.status)}`}>
-                                        {post.status}
-                                    </div>
                                 </div>
                                 
-                                <div className="p-6">
-                                    <h3 className="text-lg font-bold text-primary mb-2 group-hover:text-accent transition-colors">{post.title}</h3>
+                                <div className="p-8">
+                                    <h3 className="text-xl font-bold text-primary mb-3 group-hover:text-accent transition-colors line-clamp-1">{post.title}</h3>
                                     
-                                    <div className="space-y-2 mb-6">
-                                        <div className="flex items-center gap-2 text-slate-400">
-                                            <MapPin size={14} />
+                                    <div className="space-y-3 mb-8">
+                                        <div className="flex items-center gap-3 text-slate-400">
+                                            <MapPin size={16} />
                                             <span className="text-[10px] font-bold uppercase tracking-widest">{post.location}</span>
                                         </div>
-                                        <div className="flex items-center gap-2 text-slate-400">
-                                            <Calendar size={14} />
+                                        <div className="flex items-center gap-3 text-slate-400">
+                                            <Calendar size={16} />
                                             <span className="text-[10px] font-bold uppercase tracking-widest">
-                                                {new Date(post.date).toLocaleDateString(undefined, { month: 'short', day: 'numeric', year: 'numeric' })}
+                                                {post.date ? new Date(post.date).toLocaleDateString(undefined, { month: 'short', day: 'numeric', year: 'numeric' }) : 'No date'}
                                             </span>
                                         </div>
                                     </div>
 
-                                    <div className="flex items-center justify-between pt-4 border-t border-slate-50">
+                                    <div className="flex items-center justify-between pt-6 border-t border-slate-50">
                                         <div className="flex gap-2">
-                                            <button className="p-2 text-slate-400 hover:text-primary transition-colors">
+                                            <button className="p-3 bg-slate-50 text-slate-400 hover:text-primary hover:bg-slate-100 rounded-xl transition-all">
                                                 <Edit size={18} />
                                             </button>
                                             <button 
                                                 onClick={() => handleDelete(post._id)}
-                                                className="p-2 text-slate-400 hover:text-red-500 transition-colors"
+                                                className="p-3 bg-red-50 text-red-400 hover:text-red-600 hover:bg-red-100 rounded-xl transition-all"
                                             >
                                                 <Trash2 size={18} />
                                             </button>
                                         </div>
-                                        <Link 
-                                            to={`/matches/${post._id}`}
-                                            className="flex items-center gap-2 text-xs font-bold text-accent hover:underline"
-                                        >
-                                            View Matches <Eye size={16} />
-                                        </Link>
                                     </div>
                                 </div>
                             </div>

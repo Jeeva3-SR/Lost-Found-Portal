@@ -1,6 +1,6 @@
-import React from 'react';
+import { Link } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
-import { Bell, HelpCircle, User } from 'lucide-react';
+import { Bell, HelpCircle, User, Settings } from 'lucide-react';
 
 const Navbar = () => {
     const { user } = useAuth();
@@ -11,9 +11,12 @@ const Navbar = () => {
             
             <div className="flex items-center gap-8">
                 <nav className="hidden md:flex items-center gap-6">
-                    <a href="#" className="text-sm font-bold text-primary border-b-2 border-primary py-1">Dashboard</a>
-                    <a href="#" className="text-sm font-semibold text-slate-500 hover:text-primary transition-colors">Matches</a>
-                    <a href="#" className="text-sm font-semibold text-slate-500 hover:text-primary transition-colors">Reports</a>
+                    <Link to="/dashboard" className="text-sm font-bold text-primary border-b-2 border-primary py-1">Dashboard</Link>
+                    <Link to="/chat" className="text-sm font-semibold text-slate-500 hover:text-primary transition-colors flex items-center gap-2">
+                        Chat
+                        <div className="w-2 h-2 bg-red-500 rounded-full"></div>
+                    </Link>
+                    <Link to="/settings" className="text-sm font-semibold text-slate-500 hover:text-primary transition-colors">Settings</Link>
                 </nav>
 
                 <div className="flex items-center gap-4 pl-8 border-l border-slate-200">

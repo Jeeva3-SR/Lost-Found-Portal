@@ -12,10 +12,6 @@ const userSchema = new mongoose.Schema({
         type: String,
         required: true
     },
-    forcePasswordChange: {
-        type: Boolean,
-        default: true
-    },
     role: {
         type: String,
         enum: ['user', 'admin'],

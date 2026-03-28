@@ -13,14 +13,6 @@ const protect = async (req, res, next) => {
                 return res.status(401).json({ message: 'User not found' });
             }
 
-            // Check if user needs to change password
-            if (req.user.forcePasswordChange && req.path !== '/change-password') {
-                return res.status(403).json({ 
-                    message: 'Password change required', 
-                    forcePasswordChange: true 
-                });
-            }
-
             next();
         } catch (error) {
             console.error(error);

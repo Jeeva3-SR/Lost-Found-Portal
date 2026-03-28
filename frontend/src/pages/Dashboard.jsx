@@ -12,7 +12,8 @@ import {
     Navigation,
     CreditCard,
     Headphones,
-    Smartphone
+    Smartphone,
+    MessageSquare
 } from 'lucide-react';
 import { Link } from 'react-router-dom';
 
@@ -20,17 +21,13 @@ const Dashboard = () => {
     const { user } = useAuth();
 
     const stats = [
-        { label: 'Report Lost Item', desc: "Describe what you're missing", icon: Search, color: 'bg-indigo-50 text-indigo-600', path: '/report/lost' },
-        { label: 'Report Found Item', desc: "Help return someone's property", icon: PlusCircle, color: 'bg-blue-50 text-blue-600', path: '/report/found' },
-        { label: 'View Matches', desc: "Potential item connections", icon: Zap, color: 'bg-amber-50 text-amber-600', badge: '03 NEW', path: '/matches' },
-        { label: 'My Posts', desc: "Manage your active reports", icon: Package, color: 'bg-slate-50 text-slate-600', badge: '07 TOTAL', path: '/my-posts' }
+        { label: 'Lost Items', desc: "Check reported missing items", icon: Search, color: 'bg-indigo-50 text-indigo-600', path: '/lost-items' },
+        { label: 'Found Items', desc: "Recovered campus property", icon: CheckCircle, color: 'bg-emerald-50 text-emerald-600', path: '/found-items' },
+        { label: 'My Reports', desc: "Manage your active posts", icon: Package, color: 'bg-slate-50 text-slate-600', path: '/my-posts' },
+        { label: 'Chat', desc: "Discuss with other partners", icon: MessageSquare, color: 'bg-purple-50 text-purple-600', path: '/chat' }
     ];
 
-    const recentActivity = [
-        { id: 1, title: 'Silver MacBook Pro', details: 'Reported Lost • Engineering Library', time: '2 hours ago', status: 'In Review', icon: Smartphone },
-        { id: 2, title: 'Leather Wallet', details: 'Reported Found • Student Center', time: 'Yesterday', status: 'Match Found', statusColor: 'text-blue-600', icon: CreditCard },
-        { id: 3, title: 'Car Key Fob', details: 'Reported Found • Faculty Parking', time: '3 days ago', status: 'Closed', icon: Navigation }
-    ];
+    const recentActivity = []; // Temporarily empty as we are transitioning to Chat
 
     return (
         <Layout>
@@ -68,14 +65,14 @@ const Dashboard = () => {
 
                 <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
                     {/* Recent Activity */}
-                    <div className="lg:col-span-2 space-y-6">
+                    <div className="lg:col-span-3 space-y-6">
                         <div className="flex justify-between items-center mb-2">
                             <h2 className="text-xl font-extrabold text-primary">Recent Activity</h2>
                             <button className="text-xs font-bold text-accent hover:underline decoration-2 underline-offset-4">View All Activity</button>
                         </div>
                         
                         <div className="space-y-4">
-                            {recentActivity.map((activity) => (
+                            {recentActivity.length > 0 ? recentActivity.map((activity) => (
                                 <div key={activity.id} className="bg-white p-5 rounded-2xl border border-slate-100 flex items-center gap-5 hover:border-slate-300 transition-colors">
                                     <div className="bg-slate-50 p-3 rounded-xl text-primary">
                                         <activity.icon size={20} />
@@ -91,50 +88,14 @@ const Dashboard = () => {
                                         <div className="text-[10px] font-bold text-slate-400 uppercase tracking-widest">{activity.time}</div>
                                     </div>
                                 </div>
-                            ))}
+                            )) : (
+                                <div className="bg-white p-12 rounded-2xl border border-dashed border-slate-200 text-center">
+                                    <p className="text-slate-400 text-xs font-bold uppercase tracking-widest">No recent activity</p>
+                                </div>
+                            )}
                         </div>
                     </div>
 
-                    {/* Latest Matches Side Panel */}
-                    <div className="space-y-6">
-                        <h2 className="text-xl font-extrabold text-primary">Latest Matches</h2>
-                        
-                        <div className="space-y-4">
-                            <div className="bg-white p-6 rounded-3xl border-2 border-blue-600 shadow-lg shadow-blue-600/5 relative overflow-hidden group">
-                                <div className="flex justify-between items-start mb-4">
-                                    <span className="text-[10px] font-extrabold text-blue-600 uppercase tracking-widest flex items-center gap-1.5">
-                                        High Confidence
-                                        <CheckCircle size={14} className="fill-current text-blue-600" />
-                                    </span>
-                                </div>
-                                <h4 className="text-lg font-bold text-primary mb-2">Sony Headphones (Black)</h4>
-                                <p className="text-xs text-slate-500 mb-6 leading-relaxed font-medium">Matches your "Lost Sony XM4" report from Nov 12.</p>
-                                <button className="w-full bg-blue-600 text-white py-3 rounded-xl text-sm font-bold flex items-center justify-center gap-2 hover:bg-blue-700 transition-all">
-                                    Claim Property
-                                </button>
-                                <div className="absolute top-0 right-0 p-4 opacity-0 group-hover:opacity-100 transition-opacity">
-                                    <CheckCircle size={16} className="text-blue-600" />
-                                </div>
-                            </div>
-
-                            <div className="bg-white p-6 rounded-3xl border border-orange-100 shadow-sm relative overflow-hidden">
-                                <div className="flex justify-between items-start mb-4">
-                                    <span className="text-[10px] font-extrabold text-orange-400 uppercase tracking-widest flex items-center gap-1.5">
-                                        Potential Match
-                                        <Clock size={14} />
-                                    </span>
-                                </div>
-                                <h4 className="text-lg font-bold text-primary mb-2">Hydroflask Water Bottle</h4>
-                                <p className="text-xs text-slate-500 mb-6 leading-relaxed font-medium">Found near Gym. Could be your reported "Blue Hydroflask".</p>
-                                <button className="w-full border border-slate-200 text-primary py-3 rounded-xl text-sm font-bold flex items-center justify-center gap-2 hover:bg-slate-50 transition-all font-inter">
-                                    Verify Details
-                                </button>
-                                <div className="absolute -bottom-4 -right-4 text-orange-50 opacity-10">
-                                    <PlusCircle size={80} />
-                                </div>
-                            </div>
-                        </div>
-                    </div>
                 </div>
             </div>
         </Layout>

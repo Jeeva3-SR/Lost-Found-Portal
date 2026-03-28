@@ -3,9 +3,9 @@ const {
     reportItem, 
     getItems, 
     getMyPosts, 
+    getItemById,
     updateItem, 
-    deleteItem,
-    getMatches
+    deleteItem
 } = require('../controllers/itemController');
 const { protect } = require('../middleware/authMiddleware');
 const upload = require('../middleware/uploadMiddleware');
@@ -17,9 +17,9 @@ router.route('/')
     .get(protect, getItems);
 
 router.get('/my-posts', protect, getMyPosts);
-router.get('/:id/matches', protect, getMatches);
 
 router.route('/:id')
+    .get(protect, getItemById)
     .put(protect, updateItem)
     .delete(protect, deleteItem);
 
