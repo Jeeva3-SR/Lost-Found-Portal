@@ -8,28 +8,37 @@ const generateToken = (id) => {
 // @desc    Register new user (for initial setup/testing)
 // @route   POST /api/auth/register
 const registerUser = async (req, res) => {
-    const { rollNumber, password, role } = req.body;
+    try {
+        const { rollNumber, password, role } = req.body;
 
-    const userExists = await User.findOne({ rollNumber });
-    if (userExists) {
-        return res.status(400).json({ message: 'User already exists' });
-    }
+        if (!rollNumber || !password) {
+            return res.status(400).json({ message: 'Roll number and password are required' });
+        }
 
-    const user = await User.create({
-        rollNumber,
-        password, // Pre-save hook will hash this
-        role: role || 'user'
-    });
+        const userExists = await User.findOne({ rollNumber });
+        if (userExists) {
+            return res.status(400).json({ message: 'User already exists' });
+        }
 
-    if (user) {
-        res.status(201).json({
-            _id: user._id,
-            rollNumber: user.rollNumber,
-            role: user.role,
-            token: generateToken(user._id)
+        const user = await User.create({
+            rollNumber,
+            password,
+            role: role || 'user'
         });
-    } else {
-        res.status(400).json({ message: 'Invalid user data' });
+
+        if (user) {
+            res.status(201).json({
+                _id: user._id,
+                rollNumber: user.rollNumber,
+                role: user.role,
+                token: generateToken(user._id)
+            });
+        } else {
+            res.status(400).json({ message: 'Invalid user data' });
+        }
+    } catch (error) {
+        console.error('Registration error:', error.message);
+        res.status(500).json({ message: error.message || 'Registration failed' });
     }
 };
 
