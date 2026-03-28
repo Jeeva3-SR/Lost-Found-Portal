@@ -63,9 +63,8 @@ const Chat = () => {
                         setSelectedUser({ _id: receiverId, rollNumber: receiverId.substring(0, 8) });
                     }
                     // If itemId is present, the item fetch effect above handles setting selectedUser
-                } else if (data.length > 0 && !selectedUser && !receiverId) {
-                    setSelectedUser(data[0].user);
                 }
+                // No auto-select: show general welcome view when no receiverId
             } catch (err) {
                 console.error(err);
             } finally {
@@ -129,6 +128,21 @@ const Chat = () => {
     useEffect(() => {
         scrollRef.current?.scrollIntoView({ behavior: 'smooth' });
     }, [messages]);
+
+    // Esc key to deselect conversation and return to welcome view
+    useEffect(() => {
+        const handleKeyDown = (e) => {
+            if (e.key === 'Escape' && selectedUser) {
+                setSelectedUser(null);
+                setMessages([]);
+                setActiveItem(null);
+                // Clear URL params
+                navigate('/chat', { replace: true });
+            }
+        };
+        window.addEventListener('keydown', handleKeyDown);
+        return () => window.removeEventListener('keydown', handleKeyDown);
+    }, [selectedUser, navigate]);
 
     const handleSendMessage = async (e) => {
         e.preventDefault();
@@ -205,7 +219,7 @@ const Chat = () => {
                         <>
                             <div className="p-6 bg-white border-b border-slate-100 flex items-center justify-between">
                                 <div className="flex items-center gap-4">
-                                    <button onClick={() => setSelectedUser(null)} className="md:hidden p-2 text-slate-400">
+                                    <button onClick={() => { setSelectedUser(null); setMessages([]); setActiveItem(null); navigate('/chat', { replace: true }); }} className="p-2 text-slate-400 hover:text-primary transition-colors">
                                         <ArrowLeft size={20} />
                                     </button>
                                         <div className="w-10 h-10 rounded-full bg-primary flex items-center justify-center text-white text-xs font-bold shadow-lg shadow-primary/20">
@@ -351,11 +365,18 @@ const Chat = () => {
                         </>
                     ) : (
                         <div className="flex-1 flex flex-col items-center justify-center p-12 text-center">
-                            <div className="w-24 h-24 bg-white rounded-full border border-slate-100 shadow-xl flex items-center justify-center mb-6">
-                                <MessageSquare className="text-slate-200" size={48} />
+                            <div className="w-28 h-28 bg-gradient-to-br from-purple-100 to-pink-50 rounded-full border border-slate-100 shadow-xl flex items-center justify-center mb-8">
+                                <MessageSquare className="text-purple-300" size={48} />
                             </div>
-                            <h2 className="text-2xl font-extrabold text-primary mb-2">Select a Conversation</h2>
-                            <p className="text-slate-400 text-sm max-w-xs font-medium">Connect with other partners to discuss lost and found items.</p>
+                            <h2 className="text-2xl font-extrabold text-primary mb-3">Your Messages</h2>
+                            <p className="text-slate-400 text-sm max-w-sm font-medium leading-relaxed mb-6">
+                                Select a conversation from the left, or click <strong>"I Found It"</strong> / <strong>"Claim Item"</strong> on any listing to start chatting.
+                            </p>
+                            <div className="flex items-center gap-3 text-[10px] font-bold text-slate-300 uppercase tracking-widest">
+                                <span>Press</span>
+                                <kbd className="px-2 py-1 bg-slate-100 rounded-md text-slate-500 font-mono text-[10px]">Esc</kbd>
+                                <span>to return here anytime</span>
+                            </div>
                         </div>
                     )}
                 </div>

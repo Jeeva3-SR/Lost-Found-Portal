@@ -4,17 +4,18 @@ import {
   LayoutDashboard, 
   Search, 
   PlusCircle, 
-  Eye, 
   FileText, 
   Settings, 
   LogOut,
   Package,
-  MessageSquare
+  MessageSquare,
+  User
 } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
 
 const Sidebar = () => {
-    const { logout } = useAuth();
+    const { user, logout } = useAuth();
+    const initials = user?.rollNumber ? user.rollNumber.substring(0, 2).toUpperCase() : 'U';
 
     const navItems = [
         { name: 'Dashboard', icon: LayoutDashboard, path: '/dashboard' },
@@ -31,8 +32,8 @@ const Sidebar = () => {
                     <Package size={20} />
                 </div>
                 <div>
-                    <h1 className="text-sm font-bold text-primary leading-tight">Lost & Found</h1>
-                    <p className="text-[10px] text-slate-400 font-medium">Digital Curator Portal</p>
+                    <h1 className="text-sm font-bold text-primary leading-tight">AcademicConnect</h1>
+                    <p className="text-[10px] text-slate-400 font-medium">Lost & Found Portal</p>
                 </div>
             </div>
 
@@ -55,10 +56,21 @@ const Sidebar = () => {
                 ))}
             </nav>
 
-            <div className="pt-4 mt-4 border-t border-slate-200">
+            <div className="pt-4 mt-4 border-t border-slate-200 space-y-1">
+                <NavLink
+                    to="/profile"
+                    className={({ isActive }) => `flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-semibold transition-all ${isActive ? 'bg-white text-primary shadow-sm border border-slate-100' : 'text-slate-500 hover:bg-slate-100'}`}
+                >
+                    <div className="w-5 h-5 rounded-full bg-gradient-to-br from-purple-500 to-pink-500 flex items-center justify-center p-[1px]">
+                        <div className="w-full h-full rounded-full bg-white flex items-center justify-center">
+                            <span className="text-[6px] font-black text-purple-600">{initials}</span>
+                        </div>
+                    </div>
+                    Profile
+                </NavLink>
                 <NavLink
                     to="/settings"
-                    className="flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-semibold text-slate-500 hover:bg-slate-100 transition-all"
+                    className={({ isActive }) => `flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-semibold transition-all ${isActive ? 'bg-white text-primary shadow-sm border border-slate-100' : 'text-slate-500 hover:bg-slate-100'}`}
                 >
                     <Settings size={18} />
                     Settings
@@ -70,12 +82,6 @@ const Sidebar = () => {
                     <LogOut size={18} />
                     Logout
                 </button>
-            </div>
-            
-            <div className="mt-8 bg-primary rounded-2xl p-4 text-white">
-                <h3 className="text-xs font-bold mb-2">Need Help?</h3>
-                <p className="text-[10px] text-slate-300 mb-3 leading-relaxed">Contact the student center for immediate assistance.</p>
-                <button className="w-full bg-white/10 hover:bg-white/20 py-2 rounded-lg text-[10px] font-bold transition-all">Support Center</button>
             </div>
         </div>
     );

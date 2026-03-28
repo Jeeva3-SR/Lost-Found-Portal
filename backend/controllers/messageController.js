@@ -18,8 +18,8 @@ const sendMessage = async (req, res) => {
         await Notification.create({
             user: receiver,
             type: 'message',
-            content: `New message from ${req.user.rollNumber}: "${content.substring(0, 20)}..."`,
-            link: '/chat'
+            content: `New message from ${req.user.rollNumber}: "${content.substring(0, 50)}${content.length > 50 ? '...' : ''}"`,
+            link: `/chat?receiver=${req.user._id}`
         });
 
         const populatedMessage = await Message.findById(message._id)

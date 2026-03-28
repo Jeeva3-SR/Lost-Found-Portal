@@ -10,6 +10,7 @@ import LostItems from './pages/LostItems';
 import FoundItems from './pages/FoundItems';
 import Settings from './pages/Settings';
 import Chat from './pages/Chat';
+import Profile from './pages/Profile';
 
 // Protected Route — waits for auth hydration, then redirects if not logged in
 const ProtectedRoute = ({ children }) => {
@@ -59,6 +60,7 @@ function App() {
                 <Route path="/found-items" element={<ProtectedRoute><FoundItems /></ProtectedRoute>} />
                 <Route path="/settings" element={<ProtectedRoute><Settings /></ProtectedRoute>} />
                 <Route path="/chat" element={<ProtectedRoute><Chat /></ProtectedRoute>} />
+                <Route path="/profile" element={<ProtectedRoute><Profile /></ProtectedRoute>} />
                 <Route path="/" element={<Navigate to="/dashboard" />} />
                 <Route path="*" element={<Navigate to="/dashboard" />} />
             </Routes>
