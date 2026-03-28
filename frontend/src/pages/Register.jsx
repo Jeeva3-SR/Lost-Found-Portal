@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
-import { LayoutDashboard, Lock, ArrowRight, Info, UserPlus } from 'lucide-react';
+import { LayoutDashboard, Lock, Info, UserPlus, Check, X } from 'lucide-react';
 
 const Register = () => {
     const [formData, setFormData] = useState({
@@ -17,9 +17,24 @@ const Register = () => {
         setFormData({ ...formData, [e.target.name]: e.target.value });
     };
 
+    // Password validation rules
+    const passwordRules = [
+        { label: 'At least 8 characters', test: (p) => p.length >= 8 },
+        { label: 'One uppercase letter (A-Z)', test: (p) => /[A-Z]/.test(p) },
+        { label: 'One lowercase letter (a-z)', test: (p) => /[a-z]/.test(p) },
+        { label: 'One number (0-9)', test: (p) => /[0-9]/.test(p) },
+        { label: 'One special character (!@#$...)', test: (p) => /[!@#$%^&*(),.?":{}|<>_\-+=~`]/.test(p) },
+    ];
+
+    const allRulesPassed = passwordRules.every(r => r.test(formData.password));
+
     const handleSubmit = async (e) => {
         e.preventDefault();
         setError('');
+
+        if (!allRulesPassed) {
+            return setError('Password does not meet all requirements');
+        }
 
         if (formData.password !== formData.confirmPassword) {
             return setError('Passwords do not match');
@@ -66,13 +81,13 @@ const Register = () => {
                 </div>
 
                 {/* Right Side: Register Form */}
-                <div className="md:w-1/2 p-12 flex flex-col justify-center">
+                <div className="md:w-1/2 p-12 flex flex-col justify-center overflow-y-auto">
                     <div className="max-w-md mx-auto w-full">
                         <h2 className="text-3xl font-bold text-primary mb-2">Create Account</h2>
-                        <p className="text-slate-500 mb-8 text-sm">Register with your university roll number.</p>
+                        <p className="text-slate-500 mb-6 text-sm">Register with your university roll number.</p>
 
                         {error && (
-                            <div className="bg-red-50 text-red-600 p-4 rounded-xl flex gap-3 items-center mb-6 border border-red-100 animate-shake">
+                            <div className="bg-red-50 text-red-600 p-4 rounded-xl flex gap-3 items-center mb-6 border border-red-100">
                                 <Info size={20} className="shrink-0" />
                                 <p className="text-sm font-medium">{error}</p>
                             </div>
@@ -106,13 +121,27 @@ const Register = () => {
                                     <input
                                         type="password"
                                         name="password"
-                                        placeholder="••••••••"
+                                        placeholder="Create a strong password"
                                         className="w-full pl-12 pr-4 py-4 bg-secondary border-none rounded-2xl focus:ring-2 focus:ring-primary outline-none transition-all text-sm"
                                         value={formData.password}
                                         onChange={handleChange}
                                         required
                                     />
                                 </div>
+                                {/* Live password strength indicators */}
+                                {formData.password && (
+                                    <div className="mt-3 p-3 bg-slate-50 rounded-xl space-y-1.5">
+                                        {passwordRules.map((rule, i) => {
+                                            const passed = rule.test(formData.password);
+                                            return (
+                                                <div key={i} className={`flex items-center gap-2 text-[11px] font-semibold transition-colors ${passed ? 'text-emerald-600' : 'text-slate-400'}`}>
+                                                    {passed ? <Check size={12} className="shrink-0" /> : <X size={12} className="shrink-0" />}
+                                                    {rule.label}
+                                                </div>
+                                            );
+                                        })}
+                                    </div>
+                                )}
                             </div>
 
                             <div>
@@ -124,24 +153,28 @@ const Register = () => {
                                     <input
                                         type="password"
                                         name="confirmPassword"
-                                        placeholder="••••••••"
+                                        placeholder="Re-enter your password"
                                         className="w-full pl-12 pr-4 py-4 bg-secondary border-none rounded-2xl focus:ring-2 focus:ring-primary outline-none transition-all text-sm"
                                         value={formData.confirmPassword}
                                         onChange={handleChange}
                                         required
                                     />
                                 </div>
+                                {formData.confirmPassword && formData.password !== formData.confirmPassword && (
+                                    <p className="mt-2 text-red-500 text-[11px] font-semibold flex items-center gap-1"><X size={12} /> Passwords do not match</p>
+                                )}
                             </div>
 
                             <button
                                 type="submit"
-                                className="w-full bg-primary text-white py-4 rounded-2xl font-bold flex items-center justify-center gap-2 hover:bg-primary-light transition-all shadow-lg shadow-primary/10 mt-4"
+                                disabled={!allRulesPassed || formData.password !== formData.confirmPassword}
+                                className="w-full bg-primary text-white py-4 rounded-2xl font-bold flex items-center justify-center gap-2 hover:bg-primary-light transition-all shadow-lg shadow-primary/10 mt-4 disabled:opacity-50 disabled:cursor-not-allowed"
                             >
                                 Create Account <UserPlus size={20} />
                             </button>
                         </form>
 
-                        <div className="mt-8 text-center">
+                        <div className="mt-6 text-center">
                             <p className="text-sm text-slate-500">
                                 Already have an account? <Link to="/login" className="text-accent font-bold hover:underline">Sign in instead</Link>
                             </p>

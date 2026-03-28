@@ -16,8 +16,9 @@ const LostItems = () => {
     const [items, setItems] = useState([]);
     const [loading, setLoading] = useState(true);
     const [searchTerm, setSearchTerm] = useState('');
+    const [dateFilter, setDateFilter] = useState('');
     const [monthFilter, setMonthFilter] = useState('');
-    const [yearFilter, setYearFilter] = useState(new Date().getFullYear().toString());
+    const [yearFilter, setYearFilter] = useState('');
     const { user } = useAuth();
     const navigate = useNavigate();
 
@@ -46,15 +47,19 @@ const LostItems = () => {
             item.description?.toLowerCase().includes(searchTerm.toLowerCase()) ||
             item.location?.toLowerCase().includes(searchTerm.toLowerCase()));
         
+        let matchesDate = true;
         let matchesMonth = true;
         let matchesYear = true;
         if (item.date) {
             const itemDate = new Date(item.date);
+            if (dateFilter) {
+                matchesDate = itemDate.toISOString().split('T')[0] === dateFilter;
+            }
             matchesMonth = monthFilter === '' || itemDate.getMonth().toString() === monthFilter;
             matchesYear = yearFilter === '' || itemDate.getFullYear().toString() === yearFilter;
         }
 
-        return matchesSearch && matchesMonth && matchesYear;
+        return matchesSearch && matchesDate && matchesMonth && matchesYear;
     });
 
     const years = Array.from({ length: 5 }, (_, i) => (new Date().getFullYear() - i).toString());
@@ -89,6 +94,12 @@ const LostItems = () => {
                         </div>
                         
                         <div className="flex items-center gap-2">
+                            <input
+                                type="date"
+                                value={dateFilter}
+                                onChange={(e) => setDateFilter(e.target.value)}
+                                className="px-4 py-3 bg-white border border-slate-100 rounded-2xl shadow-sm text-sm font-bold text-slate-600 outline-none focus:border-primary/20 cursor-pointer"
+                            />
                             <select 
                                 value={monthFilter}
                                 onChange={(e) => setMonthFilter(e.target.value)}

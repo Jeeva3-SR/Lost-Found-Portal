@@ -254,48 +254,54 @@ const Chat = () => {
                                 </div>
 
                             <div className="flex-1 p-8 overflow-y-auto space-y-6 bg-slate-50/50">
-                                {messages.map((msg, idx) => {
-                                    const isMe = msg.sender._id === user._id;
-                                    return (
-                                        <div key={idx} className={`flex ${isMe ? 'justify-end' : 'justify-start'}`}>
-                                            <div className={`max-w-[75%] space-y-2`}>
-                                                {msg.item && typeof msg.item === 'object' && (
-                                                    <div 
-                                                        onClick={() => setViewingItem(msg.item)}
-                                                        className={`p-3 rounded-2xl bg-white/80 backdrop-blur-sm border border-slate-100 shadow-sm flex items-center gap-3 cursor-pointer hover:bg-slate-50 transition-all group/item ${isMe ? 'mr-4 ml-auto' : 'ml-4 mr-auto'}`}
-                                                    >
-                                                        <div className="w-10 h-10 rounded-lg overflow-hidden bg-slate-100 shrink-0">
-                                                            {msg.item.image ? (
-                                                                <img 
-                                                                    src={`http://localhost:5000/uploads/${msg.item.image}`} 
-                                                                    className="w-full h-full object-cover" 
-                                                                    onError={(e) => { e.target.onerror = null; e.target.src = 'https://placehold.co/100x100?text=Item'; }}
-                                                                />
-                                                            ) : (
-                                                                <div className="w-full h-full flex items-center justify-center text-slate-300"><Package size={16} /></div>
-                                                            )}
-                                                        </div>
-                                                        <div className="min-w-0 flex-1">
-                                                            <p className="text-[9px] font-black uppercase tracking-widest text-slate-400 mb-0.5">Product Link</p>
-                                                            <div className="flex items-center justify-between">
-                                                                <h5 className="text-xs font-bold text-blue-600 underline underline-offset-4 decoration-blue-200 group-hover/item:decoration-blue-600 truncate mr-2">
-                                                                    {msg.item.title || 'Untitled Item'}
-                                                                </h5>
-                                                                <Eye size={12} className="text-blue-500 shrink-0 group-hover/item:scale-125 transition-transform" />
+                                {(() => {
+                                    const shownItems = new Set();
+                                    return messages.map((msg, idx) => {
+                                        const isMe = msg.sender._id === user._id;
+                                        const itemKey = msg.item && typeof msg.item === 'object' ? msg.item._id : null;
+                                        const showItemCard = itemKey && !shownItems.has(itemKey);
+                                        if (itemKey) shownItems.add(itemKey);
+                                        return (
+                                            <div key={idx} className={`flex ${isMe ? 'justify-end' : 'justify-start'}`}>
+                                                <div className={`max-w-[75%] space-y-2`}>
+                                                    {showItemCard && (
+                                                        <div 
+                                                            onClick={() => setViewingItem(msg.item)}
+                                                            className={`p-3 rounded-2xl bg-white/80 backdrop-blur-sm border border-slate-100 shadow-sm flex items-center gap-3 cursor-pointer hover:bg-slate-50 transition-all group/item ${isMe ? 'mr-4 ml-auto' : 'ml-4 mr-auto'}`}
+                                                        >
+                                                            <div className="w-10 h-10 rounded-lg overflow-hidden bg-slate-100 shrink-0">
+                                                                {msg.item.image ? (
+                                                                    <img 
+                                                                        src={`http://localhost:5000/uploads/${msg.item.image}`} 
+                                                                        className="w-full h-full object-cover" 
+                                                                        onError={(e) => { e.target.onerror = null; e.target.src = 'https://placehold.co/100x100?text=Item'; }}
+                                                                    />
+                                                                ) : (
+                                                                    <div className="w-full h-full flex items-center justify-center text-slate-300"><Package size={16} /></div>
+                                                                )}
+                                                            </div>
+                                                            <div className="min-w-0 flex-1">
+                                                                <p className="text-[9px] font-black uppercase tracking-widest text-slate-400 mb-0.5">Product Link</p>
+                                                                <div className="flex items-center justify-between">
+                                                                    <h5 className="text-xs font-bold text-blue-600 underline underline-offset-4 decoration-blue-200 group-hover/item:decoration-blue-600 truncate mr-2">
+                                                                        {msg.item.title || 'Untitled Item'}
+                                                                    </h5>
+                                                                    <Eye size={12} className="text-blue-500 shrink-0 group-hover/item:scale-125 transition-transform" />
+                                                                </div>
                                                             </div>
                                                         </div>
-                                                    </div>
-                                                )}
-                                                <div className={`p-5 rounded-[2rem] text-sm font-medium shadow-md transition-all hover:shadow-lg ${isMe ? 'bg-primary text-white rounded-tr-none' : 'bg-white text-primary border border-slate-100 rounded-tl-none'}`}>
-                                                    {msg.content}
-                                                    <div className={`text-[10px] mt-2 opacity-50 font-bold ${isMe ? 'text-right' : 'text-left'}`}>
-                                                        {new Date(msg.createdAt).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
+                                                    )}
+                                                    <div className={`p-5 rounded-[2rem] text-sm font-medium shadow-md transition-all hover:shadow-lg ${isMe ? 'bg-primary text-white rounded-tr-none' : 'bg-white text-primary border border-slate-100 rounded-tl-none'}`}>
+                                                        {msg.content}
+                                                        <div className={`text-[10px] mt-2 opacity-50 font-bold ${isMe ? 'text-right' : 'text-left'}`}>
+                                                            {new Date(msg.createdAt).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
+                                                        </div>
                                                     </div>
                                                 </div>
                                             </div>
-                                        </div>
-                                    );
-                                })}
+                                        );
+                                    });
+                                })()}
                                 <div ref={scrollRef} />
                             </div>
 
