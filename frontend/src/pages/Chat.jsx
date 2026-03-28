@@ -197,8 +197,8 @@ const Chat = () => {
                                     onClick={() => setSelectedUser(conv.user)}
                                     className={`p-6 flex items-center gap-4 cursor-pointer border-b border-slate-50 transition-all ${selectedUser?._id === conv.user._id ? 'bg-primary/5 border-l-4 border-l-primary' : 'hover:bg-slate-50'}`}
                                 >
-                                    <div className="w-12 h-12 rounded-full bg-slate-100 flex items-center justify-center text-primary font-bold shadow-sm">
-                                        {conv.user.rollNumber.substring(0, 2)}
+                                    <div className="w-12 h-12 rounded-full bg-slate-100 flex items-center justify-center shadow-sm">
+                                        <User size={20} className="text-slate-400" />
                                     </div>
                                     <div className="flex-1 overflow-hidden">
                                         <div className="flex justify-between items-center mb-1">
@@ -222,8 +222,8 @@ const Chat = () => {
                                     <button onClick={() => { setSelectedUser(null); setMessages([]); setActiveItem(null); navigate('/chat', { replace: true }); }} className="p-2 text-slate-400 hover:text-primary transition-colors">
                                         <ArrowLeft size={20} />
                                     </button>
-                                        <div className="w-10 h-10 rounded-full bg-primary flex items-center justify-center text-white text-xs font-bold shadow-lg shadow-primary/20">
-                                            {selectedUser?.rollNumber?.substring(0, 2) || "U"}
+                                        <div className="w-10 h-10 rounded-full bg-slate-100 flex items-center justify-center shadow-lg">
+                                            <User size={18} className="text-slate-400" />
                                         </div>
                                         <div>
                                             <h3 className="text-sm font-bold text-primary">{selectedUser?.rollNumber || "User"}</h3>
