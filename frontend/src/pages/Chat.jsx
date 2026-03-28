@@ -13,6 +13,7 @@ const Chat = () => {
     const [messages, setMessages] = useState([]);
     const [selectedUser, setSelectedUser] = useState(null);
     const [newMessage, setNewMessage] = useState('');
+    const [searchTerm, setSearchTerm] = useState('');
     const [loading, setLoading] = useState(true);
     const [activeItem, setActiveItem] = useState(null);
     const [viewingItem, setViewingItem] = useState(null);
@@ -178,7 +179,9 @@ const Chat = () => {
                             <Search className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400" size={16} />
                             <input 
                                 type="text" 
-                                placeholder="Find partner..."
+                                placeholder="Search by roll number..."
+                                value={searchTerm}
+                                onChange={(e) => setSearchTerm(e.target.value)}
                                 className="w-full pl-10 pr-4 py-3 bg-slate-50 border-none rounded-xl text-xs font-bold outline-none"
                             />
                         </div>
@@ -191,7 +194,9 @@ const Chat = () => {
                                 <p className="text-slate-400 text-xs font-bold uppercase tracking-widest">No chats yet</p>
                             </div>
                         ) : (
-                            conversations.map(conv => (
+                            conversations.filter(conv => 
+                                conv.user?.rollNumber?.toLowerCase().includes(searchTerm.toLowerCase())
+                            ).map(conv => (
                                 <div 
                                     key={conv.user._id}
                                     onClick={() => setSelectedUser(conv.user)}
