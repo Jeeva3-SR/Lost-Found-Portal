@@ -76,7 +76,7 @@ const Register = () => {
                     </div>
 
                     <div className="absolute inset-0 opacity-20 pointer-events-none">
-                        <img src="../public/register.webp" alt="Campus" className="w-full h-full object-cover" />
+                        <img src="../../public/register.webp" alt="Campus" className="w-full h-full object-cover" />
                     </div>
                 </div>
 
