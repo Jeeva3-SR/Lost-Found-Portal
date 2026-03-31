@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import { LayoutDashboard, Lock, ArrowRight, Info } from 'lucide-react';
-
+import register from "../../public/anna university.webp";
 const Login = () => {
     const [rollNumber, setRollNumber] = useState('');
     const [password, setPassword] = useState('');
@@ -24,7 +24,7 @@ const Login = () => {
     return (
         <div className="min-h-screen bg-secondary flex items-center justify-center p-4 font-inter">
             <div className="bg-white rounded-3xl shadow-2xl overflow-hidden max-w-5xl w-full flex flex-col md:flex-row min-h-[600px]">
-                
+
                 {/* Left Side: Branding */}
                 <div className="md:w-1/2 bg-secondary-light p-12 flex flex-col justify-between relative">
                     <div>
@@ -34,26 +34,21 @@ const Login = () => {
                             </div>
                             <span>AcademicConnect</span>
                         </div>
-                        
+
                         <h1 className="text-5xl font-extrabold text-primary leading-tight mb-6">
                             The Digital <br />
                             <span className="text-accent">Curator Portal</span>
                         </h1>
-                        
+
                         <p className="text-slate-500 text-lg max-w-md leading-relaxed">
                             Recovering lost possessions with the same precision and care as our academic excellence.
                         </p>
                     </div>
-                    
+
                     <div className="mt-12">
                         <div className="bg-slate-200 rounded-2xl h-48 w-full flex items-center justify-center overflow-hidden">
-                            <div className="text-slate-400 opacity-50">
-                                <img src="../public/anna university.webp" alt="University" className="w-full h-full object-cover grayscale" />
-                            </div>
+                            <img src={register} alt="University" className="h-full w-full object-cover" />
                         </div>
-                        <p className="text-xs text-slate-400 mt-4 tracking-widest uppercase">
-                            Est. 1924 • Institutional Integrity
-                        </p>
                     </div>
                 </div>
 
@@ -79,7 +74,7 @@ const Login = () => {
                                     </div>
                                     <input
                                         type="text"
-                                        placeholder="e.g. 2024-UG-452"
+                                        placeholder="e.g. 2023103604"
                                         className="w-full pl-12 pr-4 py-4 bg-secondary border-none rounded-2xl focus:ring-2 focus:ring-primary outline-none transition-all text-sm"
                                         value={rollNumber}
                                         onChange={(e) => setRollNumber(e.target.value)}
@@ -127,18 +122,7 @@ const Login = () => {
                             </p>
                         </div>
 
-                        <div className="mt-12 pt-8 border-t border-slate-100 flex justify-center gap-6 text-xs text-slate-400 font-medium">
-                            <a href="#" className="hover:text-primary transition-colors">Security Policy</a>
-                            <a href="#" className="hover:text-primary transition-colors">Support Desk</a>
-                        </div>
                     </div>
-                </div>
-            </div>
-            
-            <div className="absolute bottom-6 left-1/2 -translate-x-1/2">
-                <div className="bg-white/80 backdrop-blur-md px-4 py-2 rounded-full border border-white/50 shadow-sm flex items-center gap-2">
-                    <div className="w-2 h-2 rounded-full bg-green-500 animate-pulse"></div>
-                    <span className="text-[10px] uppercase tracking-widest font-bold text-slate-500">System Status: Secure & Operational</span>
                 </div>
             </div>
         </div>

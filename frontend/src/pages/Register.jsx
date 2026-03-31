@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import { LayoutDashboard, Lock, Info, UserPlus, Check, X } from 'lucide-react';
-
+import photo from "../../public/register.webp";
 const Register = () => {
     const [formData, setFormData] = useState({
         rollNumber: '',
@@ -76,7 +76,7 @@ const Register = () => {
                     </div>
 
                     <div className="absolute inset-0 opacity-20 pointer-events-none">
-                        <img src="../../public/register.webp" alt="Campus" className="w-full h-full object-cover" />
+                        <img src={photo} alt="Campus" className="w-full h-full object-cover" />
                     </div>
                 </div>
 
@@ -103,7 +103,7 @@ const Register = () => {
                                     <input
                                         type="text"
                                         name="rollNumber"
-                                        placeholder="e.g. 2024-UG-452"
+                                        placeholder="e.g. 2023103604"
                                         className="w-full pl-12 pr-4 py-4 bg-secondary border-none rounded-2xl focus:ring-2 focus:ring-primary outline-none transition-all text-sm"
                                         value={formData.rollNumber}
                                         onChange={handleChange}
