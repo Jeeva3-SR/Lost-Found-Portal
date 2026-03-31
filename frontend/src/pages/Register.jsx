@@ -54,7 +54,7 @@ const Register = () => {
     return (
         <div className="min-h-screen bg-secondary flex items-center justify-center p-4 font-inter">
             <div className="bg-white rounded-3xl shadow-2xl overflow-hidden max-w-5xl w-full flex flex-col md:flex-row min-h-[600px]">
-                
+
                 {/* Left Side: Branding */}
                 <div className="md:w-1/2 bg-slate-900 p-12 flex flex-col justify-between relative text-white">
                     <div className="z-10">
@@ -64,19 +64,19 @@ const Register = () => {
                             </div>
                             <span>AcademicConnect</span>
                         </div>
-                        
+
                         <h1 className="text-5xl font-extrabold leading-tight mb-6">
                             Join the <br />
                             <span className="text-accent">Guardian Network</span>
                         </h1>
-                        
+
                         <p className="text-slate-400 text-lg max-w-md leading-relaxed">
                             Create your account to start reporting lost items and helping others recover their property.
                         </p>
                     </div>
-                    
+
                     <div className="absolute inset-0 opacity-20 pointer-events-none">
-                        <img src="https://images.unsplash.com/photo-1523050335102-c32509087440?auto=format&fit=crop&q=80&w=1200" alt="Campus" className="w-full h-full object-cover" />
+                        <img src="../public/register.webp" alt="Campus" className="w-full h-full object-cover" />
                     </div>
                 </div>
 

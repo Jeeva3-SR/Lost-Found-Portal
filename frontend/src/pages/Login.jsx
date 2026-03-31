@@ -48,7 +48,7 @@ const Login = () => {
                     <div className="mt-12">
                         <div className="bg-slate-200 rounded-2xl h-48 w-full flex items-center justify-center overflow-hidden">
                             <div className="text-slate-400 opacity-50">
-                                <img src="https://images.unsplash.com/photo-1541339907198-e08756ebafe3?auto=format&fit=crop&q=80&w=800" alt="University" className="w-full h-full object-cover grayscale" />
+                                <img src="../public/anna university.webp" alt="University" className="w-full h-full object-cover grayscale" />
                             </div>
                         </div>
                         <p className="text-xs text-slate-400 mt-4 tracking-widest uppercase">
