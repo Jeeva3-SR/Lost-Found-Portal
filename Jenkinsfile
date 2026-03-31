@@ -31,31 +31,29 @@ pipeline {
 
         stage('Deploy') {
             steps {
-                // Stop PM2 first
                 sh '''
-                    sudo -u Jeeva bash -c "pm2 delete academicconnect-api 2>/dev/null || true"
-                    sudo -u Jeeva bash -c "pm2 kill 2>/dev/null || true"
-                '''
+                    # Stop only this app
+                    sudo -u Jeeva pm2 delete academicconnect-api 2>/dev/null || true
 
-                // Sync files (without deleting uploads or .env)
-                sh '''
+                    # Create directories
                     sudo mkdir -p /var/www/academicconnect/backend
                     sudo mkdir -p /var/www/academicconnect/frontend
                     sudo mkdir -p /var/www/academicconnect/backend/uploads
 
-                    sudo rsync -a --delete --exclude='uploads' --exclude='.env' --exclude='node_modules' backend/ /var/www/academicconnect/backend/
+                    # Sync files
+                    sudo rsync -a --delete --exclude='uploads' --exclude='.env' backend/ /var/www/academicconnect/backend/
                     sudo rsync -a --delete frontend/dist/ /var/www/academicconnect/frontend/
 
-                    cd backend && sudo cp -r node_modules /var/www/academicconnect/backend/ 2>/dev/null || true
-                    cd ..
+                    # Install production dependencies
+                    sudo -u Jeeva bash -c "cd /var/www/academicconnect/backend && npm ci --production"
 
-                    sudo cp /var/www/academicconnect/.env /var/www/academicconnect/backend/.env 2>/dev/null || true
+                    # Copy env if exists
+                    [ -f /var/www/academicconnect/.env ] && sudo cp /var/www/academicconnect/.env /var/www/academicconnect/backend/.env
 
+                    # Fix permissions
                     sudo chown -R Jeeva:Jeeva /var/www/academicconnect
-                '''
 
-                // Start PM2 fresh as user Jeeva
-                sh '''
+                    # Start app
                     sudo -u Jeeva bash -c "cd /var/www/academicconnect/backend && pm2 start server.js --name academicconnect-api && pm2 save"
                 '''
             }
@@ -68,6 +66,9 @@ pipeline {
         }
         failure {
             echo '❌ Deployment failed.'
+        }
+        always {
+            cleanWs()
         }
     }
 }
