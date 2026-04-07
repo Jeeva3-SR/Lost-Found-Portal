@@ -2,17 +2,17 @@ import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { useAuth } from '../context/AuthContext';
 import Layout from '../components/Layout';
-import { 
-    MessageSquare, 
-    Check, 
-    X, 
-    Clock, 
-    User, 
+import {
+    MessageSquare,
+    Check,
+    X,
+    Clock,
+    User,
     Package,
     AlertCircle,
     CheckCircle2
 } from 'lucide-react';
-
+// simple comment
 const Claims = () => {
     const [claims, setClaims] = useState([]);
     const [loading, setLoading] = useState(true);
@@ -97,13 +97,13 @@ const Claims = () => {
                                 <div className="flex flex-col gap-2 shrink-0 w-full md:w-auto">
                                     {claim.status === 'pending' ? (
                                         <div className="flex gap-2">
-                                            <button 
+                                            <button
                                                 onClick={() => handleAction(claim._id, 'approved')}
                                                 className="flex-1 bg-green-600 text-white px-6 py-3 rounded-xl text-sm font-bold flex items-center justify-center gap-2 hover:bg-green-700 transition-all shadow-lg shadow-green-600/10"
                                             >
                                                 <Check size={18} /> Approve
                                             </button>
-                                            <button 
+                                            <button
                                                 onClick={() => handleAction(claim._id, 'rejected')}
                                                 className="flex-1 bg-white border border-red-100 text-red-500 px-6 py-3 rounded-xl text-sm font-bold flex items-center justify-center gap-2 hover:bg-red-50 transition-all"
                                             >
@@ -111,9 +111,8 @@ const Claims = () => {
                                             </button>
                                         </div>
                                     ) : (
-                                        <div className={`px-6 py-3 rounded-xl text-sm font-bold flex items-center justify-center gap-2 uppercase tracking-widest ${
-                                            claim.status === 'approved' ? 'bg-green-50 text-green-600' : 'bg-red-50 text-red-600'
-                                        }`}>
+                                        <div className={`px-6 py-3 rounded-xl text-sm font-bold flex items-center justify-center gap-2 uppercase tracking-widest ${claim.status === 'approved' ? 'bg-green-50 text-green-600' : 'bg-red-50 text-red-600'
+                                            }`}>
                                             {claim.status === 'approved' ? <CheckCircle2 size={18} /> : <AlertCircle size={18} />}
                                             {claim.status}
                                         </div>
